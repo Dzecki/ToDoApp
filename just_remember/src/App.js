@@ -2,16 +2,23 @@ import React, { useState } from 'react'
 import Task from './Components/Task';
 
 export default function App() {
-  const [trip, setTrip] = useState({taskTitle: '', taskInfo: ''})
   const [tasks, setTasks] = useState([]);
+  const [task, setTask] = useState({taskTitle: '', taskInfo: ''});
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setTask({
+      ...task,[e.target.name]: value
+    })
+  }
 
   const createItem = () => {
-    const item = <Task id={tasks.length} deleteFunction={deleteItem}/>
+    const item = <Task id={tasks.length} title={task.taskTitle} info={task.taskInfo} deleteFunction={deleteItem}/>;
     setTasks([...tasks, item]);
   }
 
   const deleteItem = () => {
-    const newList = tasks.filter((item) => item !== item);
+    const newList = tasks.filter((item) => item.key === 2);
     setTasks(newList);
   }
 
@@ -29,7 +36,8 @@ export default function App() {
         </div>
 
         <button className='absolute bottom-0 w-[50px] h-[50px] bg-blue-400 rounded-tr-md' onClick={createItem}>add</button>
-        <button className='absolute bottom-0 right-0 w-[50px] h-[50px] bg-blue-400 rounded-tr-md' onClick={deleteItem}>del</button>
+        <input placeholder='title' name='taskTitle' value={task.taskTitle} onChange={handleChange}/>
+        <input className='mx-2' placeholder='info' name='taskInfo' value={task.taskInfo} onChange={handleChange}/>
       </div>
     </div>
   )
