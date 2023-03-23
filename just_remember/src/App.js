@@ -12,16 +12,14 @@ export default function App() {
     })
   }
 
-  const createItem = () => {
-    const item = <Task id={tasks.length} title={task.taskTitle} info={task.taskInfo} deleteFunction={deleteItem}/>;
-    setTasks([...tasks, item]);
-  }
+  const taskList = tasks.map((item) => (
+    <Task key={item.taskTitle}/>
+  ));
 
-  const deleteItem = () => {
-    const newList = tasks.filter((item) => item.key === 2);
-    setTasks(newList);
+  const addTask = () => {
+    setTasks([...tasks, task]);
   }
-
+  
   return (
     <div className='flex items-center justify-center w-[100vw] h-[100vh] bg-blue-200'>
       <div className='relative w-[70%] h-[80%] bg-blue-300 rounded-lg shadow-sm'>
@@ -32,10 +30,10 @@ export default function App() {
         </div>
 
         <div className='flex flex-col items-center mt-8'>
-          {tasks.map((task) => task)}
+          {taskList}
         </div>
 
-        <button className='absolute bottom-0 w-[50px] h-[50px] bg-blue-400 rounded-tr-md' onClick={createItem}>add</button>
+        <button className='absolute bottom-0 w-[50px] h-[50px] bg-blue-400 rounded-tr-md' onClick={addTask}>add</button>
         <input placeholder='title' name='taskTitle' value={task.taskTitle} onChange={handleChange}/>
         <input className='mx-2' placeholder='info' name='taskInfo' value={task.taskInfo} onChange={handleChange}/>
       </div>
