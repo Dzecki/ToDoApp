@@ -3,7 +3,7 @@ import Task from './Components/Task';
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState({taskTitle: '', taskInfo: ''});
+  const [task, setTask] = useState({taskID: 1, taskTitle: '', taskInfo: ''});
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -12,12 +12,18 @@ export default function App() {
     })
   }
 
-  const taskList = tasks.map((item) => (
-    <Task key={item.taskTitle}/>
+  const deleteTask = (id) => {
+    const remainingTasks = tasks.filter((task) => id !== task.taskID);
+    setTasks(remainingTasks);
+  } 
+
+  const taskList = tasks.map((task) => (
+    <Task id={task.taskID} title={task.taskTitle} deleteTask={deleteTask}/>
   ));
 
   const addTask = () => {
     setTasks([...tasks, task]);
+    setTask({taskID: 2});
   }
   
   return (
