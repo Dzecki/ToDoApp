@@ -3,10 +3,11 @@ import Task from './Components/Task';
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState({taskID: 0, taskTitle: '', taskDescription: '', taskStartDate: '', taskEndDate: ''});
+  const [task, setTask] = useState({taskID: tasks.length, taskTitle: '', taskDescription: '', taskStartDate: '', taskEndDate: '', status: false});
 
-  const changeTab = (e) => {
-    return e.target.style = "opacity: 100%";
+  const changeTab = () => {
+    const remainingTasks = tasks.filter((task) => !task.status);
+    setTasks(remainingTasks);
   }
 
   const handleChange = (e) => {
@@ -16,19 +17,29 @@ export default function App() {
     })
   }
 
-  const deleteTask = (id) => {
-    const remainingTasks = tasks.filter((task) => id !== task.taskID);
-    setTasks(remainingTasks);
+  const deleteTask = (id) => {  
+    const newList = tasks.filter((task) => id !== task.taskID);
+    setTasks(newList);
   } 
 
   const addTask = () => {
-    console.log(tasks);
-    setTask({taskID: tasks.length});
+    setTask({taskID: tasks.length+1});
     setTasks([...tasks, task]);
   }
 
+  function toggleTaskCompleted(id) {
+    const updatedTasks = tasks.map((task) => {
+      if (id === task.id) {
+        return {...task, status: true}
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+  }
+
   const taskList = tasks.map((task) => (
-    <Task id={task.taskID} title={task.taskTitle} description={task.taskDescription} startDate={task.taskStartDate} endDate={task.taskEndDate} deleteTask={deleteTask}/>
+    <Task id={task.taskID} title={task.taskTitle} description={task.taskDescription} startDate={task.taskStartDate} 
+    toggleTaskCompleted={toggleTaskCompleted} endDate={task.taskEndDate} deleteTask={deleteTask} status={task.status}/>
   ));
   
   return (
@@ -40,7 +51,7 @@ export default function App() {
           <div className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="done">DONE</div>
         </div>
         <div className='flex justify-around items-center bg-gray-800 w-[60%] rounded-t-md h-[90px] text-white text-2xl border-2 border-gray-900 border-b-0'>
-          <div className='flex justify-center items-center h-[100%] bg-gray-800 w-[100%] rounded-sm text-white text-[18px]'>
+          <form className='flex justify-center items-center h-[100%] bg-gray-800 w-[100%] rounded-sm text-white text-[18px]'>
             <div className='flex flex-col w-[60%]'>
               <input className='m-1 h-[32px] bg-transparent rounded-br-md border-r border-b border-gray-900 p-1' placeholder='title' name='taskTitle' value={task.taskTitle} onChange={handleChange}/>
               <input className='m-1 h-[32px] bg-transparent rounded-tr-md border-r border-t border-gray-900 p-1' placeholder='description' name='taskDescription' value={task.taskDescription} onChange={handleChange}/>
@@ -55,8 +66,8 @@ export default function App() {
                 <input className='m-1 bg-transparent p-1' type="date" name='taskEndDate' value={task.taskEndDate} onChange={handleChange}></input>
               </div>
             </div>
-            <button className='h-[100%] w-[80px] bg-gray-900 font-semibold hover:bg-gray-600 transition-all ml-1' onClick={addTask}>add</button>
-          </div>
+            <button className='h-[100%] w-[80px] bg-gray-900 font-semibold hover:bg-gray-600 transition-all ml-1' type='reset' onClick={addTask}>add</button>
+          </form>
         </div>
       </div>
 
