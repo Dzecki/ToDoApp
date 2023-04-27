@@ -3,10 +3,12 @@ import Task from './Components/Task';
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
+  const [allTasks, setAllTasks] = useState([]);
   const [task, setTask] = useState({taskID: tasks.length, taskTitle: '', taskDescription: '', taskStartDate: '', taskEndDate: '', status: false});
 
-  const changeTab = () => {
-    const remainingTasks = tasks.filter((task) => !task.status);
+  
+  const changeTab = (e) => {
+    const remainingTasks = allTasks.filter((task) => task.status === e.target.value);
     setTasks(remainingTasks);
   }
 
@@ -20,21 +22,24 @@ export default function App() {
   const deleteTask = (id) => {  
     const newList = tasks.filter((task) => id !== task.taskID);
     setTasks(newList);
+    setAllTasks(newList);
   } 
 
   const addTask = () => {
-    setTask({taskID: tasks.length+1});
+    setTask({taskID: tasks.length+1, taskTitle: '', taskDescription: '', taskStartDate: '', taskEndDate: '', status: false});
     setTasks([...tasks, task]);
+    setAllTasks([...allTasks, task]);
   }
 
   function toggleTaskCompleted(id) {
     const updatedTasks = tasks.map((task) => {
-      if (id === task.id) {
-        return {...task, status: true}
+      if (id === task.taskID) {
+        return {...task, status: !task.status}
       }
       return task;
     });
     setTasks(updatedTasks);
+    setAllTasks(updatedTasks);
   }
 
   const taskList = tasks.map((task) => (
@@ -46,9 +51,9 @@ export default function App() {
     <div className='flex flex-col items-center justify-center w-[100vw] h-[100vh] bg-gray-700'>
       <div className='flex justify-between w-[75%]'>
         <div className='flex justify-between items-center bg-gray-800 w-[39%] mb-2 rounded-md h-[80px] text-white font-bold text-[30px] border-2 border-gray-900'>
-          <div className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="all" onClick={changeTab}>ALL</div>
-          <div className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="todo">TO-DO</div>
-          <div className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="done">DONE</div>
+          <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="all" value={1} onClick={changeTab}>ALL</button>
+          <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="todo" value={false} onClick={changeTab}>TO-DO</button>
+          <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="done" value={true} onClick={changeTab}>DONE</button>
         </div>
         <div className='flex justify-around items-center bg-gray-800 w-[60%] rounded-t-md h-[90px] text-white text-2xl border-2 border-gray-900 border-b-0'>
           <form className='flex justify-center items-center h-[100%] bg-gray-800 w-[100%] rounded-sm text-white text-[18px]'>
@@ -59,14 +64,14 @@ export default function App() {
             <div className='flex flex-col ml-1 w-[30%]'>
               <div className='flex border-l border-b border-gray-900 m-1 h-[32px] rounded-bl-md'>
                 <label className='w-[50px] text-[10px] font-semibold text-center'>START</label>
-                <input className='m-1 bg-transparent border-b-2 border-gray-800 rounded-sm p-1' type="date" name='taskStartDate' value={task.taskStartDate} onChange={handleChange}></input>
+                <input className='ml-2 bg-transparent border-b-2 border-gray-800 rounded-sm' type="date" name='taskStartDate' value={task.taskStartDate} onChange={handleChange}></input>
               </div>
               <div className='flex border-l border-t border-gray-900 m-1 h-[32px] rounded-tl-md'>
                 <label className='w-[50px] text-[10px] font-semibold text-center'>END</label>
-                <input className='m-1 bg-transparent p-1' type="date" name='taskEndDate' value={task.taskEndDate} onChange={handleChange}></input>
+                <input className='ml-2 bg-transparent' type="date" name='taskEndDate' value={task.taskEndDate} onChange={handleChange}></input>
               </div>
             </div>
-            <button className='h-[100%] w-[80px] bg-gray-900 font-semibold hover:bg-gray-600 transition-all ml-1' type='reset' onClick={addTask}>add</button>
+            <button className='h-[100%] w-[80px] bg-gray-900 font-bold hover:bg-gray-600 transition-all ml-1' type='reset' onClick={addTask}>ADD</button>
           </form>
         </div>
       </div>
