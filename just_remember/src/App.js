@@ -5,10 +5,15 @@ export default function App() {
   const [tasks, setTasks] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
   const [task, setTask] = useState({taskID: tasks.length, taskTitle: '', taskDescription: '', taskStartDate: '', taskEndDate: '', status: false});
+  const [editMode, setEditMode] = useState(false);
 
-  
+  const changeTabAll = () => {
+    setTasks(allTasks);
+  }
+
   const changeTab = (e) => {
-    const remainingTasks = allTasks.filter((task) => task.status === e.target.value);
+    let x = JSON.parse(e.target.value)
+    const remainingTasks = allTasks.filter((task) => task.status === x);
     setTasks(remainingTasks);
   }
 
@@ -19,8 +24,26 @@ export default function App() {
     })
   }
 
+  const handleChangeEdit = (e) => {
+    const value = e.target.value;
+    setTask({
+      ...task,[e.target.name]: value
+    })
+  }
+
+  function editTask(id) {
+    const updatedTasks = tasks.map((task) => {
+      if (id === task.taskID) {
+        return {...task, title: task.taskTitle, description: task.taskDescription}
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+    setAllTasks(updatedTasks);
+  }
+
   const deleteTask = (id) => {  
-    const newList = tasks.filter((task) => id !== task.taskID);
+    const newList = allTasks.filter((task) => id !== task.taskID);
     setTasks(newList);
     setAllTasks(newList);
   } 
@@ -43,15 +66,15 @@ export default function App() {
   }
 
   const taskList = tasks.map((task) => (
-    <Task id={task.taskID} title={task.taskTitle} description={task.taskDescription} startDate={task.taskStartDate} 
-    toggleTaskCompleted={toggleTaskCompleted} endDate={task.taskEndDate} deleteTask={deleteTask} status={task.status}/>
+    <Task id={task.taskID} title={task.taskTitle} description={task.taskDescription} startDate={task.taskStartDate} editTask={editTask} setEditMode={setEditMode} editMode={editMode}
+    toggleTaskCompleted={toggleTaskCompleted} endDate={task.taskEndDate} deleteTask={deleteTask} status={task.status} handleChangeEdit={handleChangeEdit}/>
   ));
   
   return (
     <div className='flex flex-col items-center justify-center w-[100vw] h-[100vh] bg-gray-700'>
       <div className='flex justify-between w-[75%]'>
         <div className='flex justify-between items-center bg-gray-800 w-[39%] mb-2 rounded-md h-[80px] text-white font-bold text-[30px] border-2 border-gray-900'>
-          <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="all" value={1} onClick={changeTab}>ALL</button>
+          <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="all" onClick={changeTabAll}>ALL</button>
           <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="todo" value={false} onClick={changeTab}>TO-DO</button>
           <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="done" value={true} onClick={changeTab}>DONE</button>
         </div>
