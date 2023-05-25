@@ -6,7 +6,6 @@ export default function App() {
   const [allTasks, setAllTasks] = useState([]);
   const [task, setTask] = useState({taskID: tasks.length, taskTitle: '', taskDescription: '', taskStartDate: '', taskEndDate: '', status: false});
   const [taskEdit, setTaskEdit] = useState({taskTitleE: '', taskDescriptionE: '', taskStartDateE: '', taskEndDateE: ''});
-  const [editMode, setEditMode] = useState(false);
 
   const changeTabAll = () => {
     setTasks(allTasks);
@@ -32,14 +31,14 @@ export default function App() {
     })
   }
 
-  function editTask(id) {
+  function editTask(id, edit) {
     const updatedTasks = tasks.map((task) => {
       if (id === task.taskID) {
         return {...task, taskTitle: taskEdit.taskTitleE, taskDescription: taskEdit.taskDescriptionE, taskStartDate: taskEdit.taskStartDateE, taskEndDate: taskEdit.taskEndDateE}
       }
       return task;
     });
-    setEditMode(false);
+    edit(false);
     setTaskEdit(false);
     setTasks(updatedTasks);
     setAllTasks(updatedTasks);
@@ -69,7 +68,7 @@ export default function App() {
   }
 
   const taskList = tasks.map((task) => (
-    <Task {...task} {...taskEdit} editTask={editTask} setEditMode={setEditMode} editMode={editMode} toggleTaskCompleted={toggleTaskCompleted} deleteTask={deleteTask} handleChangeEdit={handleChangeEdit} />
+    <Task {...task} {...taskEdit} editTask={editTask} toggleTaskCompleted={toggleTaskCompleted} deleteTask={deleteTask} handleChangeEdit={handleChangeEdit} />
   ));
   
   return (
