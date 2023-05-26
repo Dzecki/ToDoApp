@@ -76,7 +76,7 @@ export default function App() {
       <div className='flex justify-between w-[75%]'>
         <div className='flex justify-between items-center bg-gray-800 w-[39%] mb-2 rounded-md h-[80px] text-white font-bold text-[30px] border-2 border-gray-900'>
           <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="all" onClick={changeTabAll}>ALL</button>
-          <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="todo" value={false} onClick={changeTab}>TO-DO</button>
+          <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%] text-2xl' name="todo" value={false} onClick={changeTab}>TO-DO</button>
           <button className='w-[33%] text-center p-6 cursor-pointer opacity-[80%]' name="done" value={true} onClick={changeTab}>DONE</button>
         </div>
         <div className='flex justify-around items-center bg-gray-800 w-[60%] rounded-t-md h-[90px] text-white text-2xl border-2 border-gray-900 border-b-0'>
